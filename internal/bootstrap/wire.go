@@ -4,6 +4,7 @@
 package bootstrap
 
 import (
+	"context"
 	"github.com/0xjasoncao/gin-scaffold/configs/config"
 	"github.com/0xjasoncao/gin-scaffold/internal/apis/handler"
 	"github.com/0xjasoncao/gin-scaffold/internal/apis/handler/V1/user"
@@ -28,7 +29,7 @@ var ProviderSet = wire.NewSet(
 	wire.Struct(new(ApiInjector), "*"),
 )
 
-func BuildInjector(config *config.Config) (*ApiInjector, func(), error) {
+func BuildInjector(ctx context.Context, config *config.Config) (*ApiInjector, func(), error) {
 	wire.Build(ProviderSet)
 	return nil, nil, nil
 }

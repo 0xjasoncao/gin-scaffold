@@ -72,7 +72,7 @@ func runServer(ctx context.Context, options *Options) (func(), error) {
 	sonyflakex.InitSonyFlake(config.C)
 
 	// Build Injector
-	injector, injectorCleanFunc, err := BuildInjector(config.C)
+	injector, injectorCleanFunc, err := BuildInjector(ctx, config.C)
 	if err != nil {
 		return nil, err
 	}

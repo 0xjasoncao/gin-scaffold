@@ -2,6 +2,8 @@ package cache
 
 import (
 	"context"
+	"fmt"
+	"github.com/0xjasoncao/gin-scaffold/pkg/logging"
 	"github.com/redis/go-redis/v9"
 	"time"
 )
@@ -11,31 +13,87 @@ type Redis struct {
 	Client redis.UniversalClient
 }
 
-// NewRedis 创建新的Redis缓存实例
-func NewRedis(addr string, password string, db int) (*Redis, func()) {
-	Client := redis.NewClient(&redis.Options{
+// NewRedis 创建单节点Redis缓存实例（带错误详情日志）
+func NewRedis(ctx context.Context, addr string, password string, db int) (*Redis, func(), error) {
+
+	// 1. 初始化客户端（明确配置信息）
+	cli := redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: password,
 		DB:       db,
 	})
 
-	return &Redis{
-			Client: Client,
-		}, func() {
-			Client.Close()
+	pingCmd := cli.Ping(ctx)
+	if err := pingCmd.Err(); err != nil {
+		logging.WithContext(ctx).Sugar().Errorf(
+			"redis single node connection failed: addr=%s, db=%d, error=%v",
+			addr, db, err,
+		)
+		_ = cli.Close()
+		return nil, nil, fmt.Errorf("connect redis single node failed: %w", err)
+	}
+
+	// 5. 成功日志（可选，便于调试环境确认连接状态）
+	logging.WithContext(ctx).Sugar().Infof(
+		"redis single node connected successfully: addr=%s, db=%d, ping response=%s",
+		addr, db, pingCmd.Val(),
+	)
+
+	cleanup := func() {
+		if err := cli.Close(); err != nil {
+			logging.WithContext(ctx).Sugar().Warnf(
+				"redis single node close failed: addr=%s, db=%d, error=%v",
+				addr, db, err,
+			)
+		} else {
+			logging.WithContext(ctx).Sugar().Infof(
+				"redis single node closed successfully: addr=%s, db=%d",
+				addr, db,
+			)
 		}
+	}
+
+	return &Redis{Client: cli}, cleanup, nil
 }
 
-func NewClusterRedis(addrs []string, password string) (*Redis, func()) {
-	Client := redis.NewClusterClient(&redis.ClusterOptions{
+// NewClusterRedis 创建Redis集群实例（带错误详情日志）
+func NewClusterRedis(ctx context.Context, addrs []string, password string) (*Redis, func(), error) {
+
+	cli := redis.NewClusterClient(&redis.ClusterOptions{
 		Addrs:    addrs,
 		Password: password,
 	})
-	return &Redis{
-			Client: Client,
-		}, func() {
-			Client.Close()
+
+	pingCmd := cli.Ping(ctx)
+	if err := pingCmd.Err(); err != nil {
+		logging.WithContext(ctx).Sugar().Errorf(
+			"redis cluster connection failed: addrs=%v, error=%v",
+			addrs, err,
+		)
+		_ = cli.Close()
+		return nil, nil, fmt.Errorf("connect redis cluster failed: %w", err)
+	}
+
+	logging.WithContext(ctx).Sugar().Infof(
+		"redis cluster connected successfully: addrs=%v, ping response=%s",
+		addrs, pingCmd.Val(),
+	)
+
+	cleanup := func() {
+		if err := cli.Close(); err != nil {
+			logging.WithContext(ctx).Sugar().Warnf(
+				"redis cluster close failed: addrs=%v, error=%v",
+				addrs, err,
+			)
+		} else {
+			logging.WithContext(ctx).Sugar().Infof(
+				"redis cluster closed successfully: addrs=%v",
+				addrs,
+			)
 		}
+	}
+
+	return &Redis{Client: cli}, cleanup, nil
 }
 
 // Set 存储键值对

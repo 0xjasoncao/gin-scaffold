@@ -17,7 +17,7 @@ http:
     excluded-path: [ ]           # Paths excluded from gzip
 
 app:
-  run-mode: debug             # Run mode (debug|test|release)
+  run-mode: release             # Run mode (debug|test|release)
   name: "Gin Scaffold"          # Application name
   print-config: true           # Whether to print configuration on startup
 
@@ -40,14 +40,15 @@ mysql:
 jwt:
   key: bzOojgQuL6notiVZHnYIe3MeayB5cRdtHKUlqDltb9A= # JWT signing secret key
   expires-at-seconds: 3600             # JWT expiration time in seconds
-  storage: redis                   # Where to store JWT (redis, memory, etc.)
+  store: memory                   # Where to store JWT (redis, memory, etc.)
   issuer: default
 
 
 cache:
-  use: redis
+  use: memory
 
 redis:
+  open: false
   use-cluster: false             # Whether to use Redis cluster mode
   addr: 127.0.0.1:6379           # Redis address (single instance mode)
   password: ""                   # Redis password
@@ -56,3 +57,4 @@ redis:
     - "172.21.0.3:7000"
     - "172.21.0.4:7001"
     - "172.21.0.2:7002"
+
