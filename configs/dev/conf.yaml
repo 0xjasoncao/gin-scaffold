@@ -1,0 +1,58 @@
+http:
+  host: 0.0.0.0                 # Server host to bind
+  port: 8080                    # Server port
+  max-content-length: 20        # Maximum allowed request body size in MB
+  read-timeout: 5               # Maximum time to read request header and body (seconds)
+  write-timeout: 10             # Maximum time to write response (seconds)
+  idle-timeout: 15              # Maximum idle time for connections (seconds)
+  max-header-bytes: 2           # Maximum allowed request header size in MB
+  gzip:
+    enable: true                # Enable gzip compression
+    excluded-extensions: [ # File extensions excluded from gzip
+      "jpg", "jpeg", "png", "gif", "webp", "bmp",
+      "mp4", "webm", "avi", "mov", "mp3", "wav",
+      "pdf", "doc", "docx", "zip", "rar", "7z",
+      "woff", "woff2", "ttf", "otf"
+    ]
+    excluded-path: [ ]           # Paths excluded from gzip
+
+app:
+  run-mode: debug             # Run mode (debug|test|release)
+  name: "Gin Scaffold"          # Application name
+  print-config: true           # Whether to print configuration on startup
+
+gorm:
+  use: mysql                     # Database driver type
+  max-idle: 10                   # Maximum idle connections in the connection pool
+  max-open: 100                  # Maximum open connections in the connection pool
+  max-life-time: 1               # Maximum lifetime of a connection in hours
+  enable-auto-migrate: true      # Whether to automatically migrate database schema
+  debug: true                    # Enable GORM debug logging
+
+mysql:
+  host: 127.0.0.1                # MySQL host
+  port: 3306                     # MySQL port
+  user: root                     # MySQL username
+  password: root                 # MySQL password
+  db-name: user                  # MySQL database name
+  parameters: charset=utf8mb4&parseTime=True&loc=Local   # Additional MySQL connection parameters
+
+jwt:
+  key: bzOojgQuL6notiVZHnYIe3MeayB5cRdtHKUlqDltb9A= # JWT signing secret key
+  expires-at-seconds: 3600             # JWT expiration time in seconds
+  storage: redis                   # Where to store JWT (redis, memory, etc.)
+  issuer: default
+
+
+cache:
+  use: redis
+
+redis:
+  use-cluster: false             # Whether to use Redis cluster mode
+  addr: 127.0.0.1:6379           # Redis address (single instance mode)
+  password: ""                   # Redis password
+  db: 0                          # Redis database index (single instance mode)
+  cluster-address: # Redis cluster nodes (only used if use-cluster is true)
+    - "172.21.0.3:7000"
+    - "172.21.0.4:7001"
+    - "172.21.0.2:7002"
