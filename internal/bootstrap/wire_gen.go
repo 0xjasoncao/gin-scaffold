@@ -37,11 +37,19 @@ func BuildInjector(ctx context.Context, config2 *config.Config) (*ApiInjector, f
 		cleanup()
 		return nil, nil, err
 	}
-	engine := router.NewRouter(config2, handlerHandler, service)
+	db, cleanup4, err := provider.InitGorm(ctx, config2)
+	if err != nil {
+		cleanup3()
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	engine := router.NewRouter(config2, handlerHandler, service, db)
 	apiInjector := &ApiInjector{
 		Engine: engine,
 	}
 	return apiInjector, func() {
+		cleanup4()
 		cleanup3()
 		cleanup2()
 		cleanup()

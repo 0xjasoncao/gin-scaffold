@@ -11,10 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CopyBodyMiddleware(optionsFunc ...OptionsFunc) gin.HandlerFunc {
+func CopyBodyMiddleware(cfg config.Http, optionsFunc ...OptionsFunc) gin.HandlerFunc {
 
 	var maxMemory int64 = 10 << 20 // 10 MB
-	if v := config.C.Http.MaxContentLength; v > 0 {
+	if v := cfg.MaxContentLength; v > 0 {
 		maxMemory = v << 20
 	}
 

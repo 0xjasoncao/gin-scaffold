@@ -1,8 +1,11 @@
 package provider
 
 import (
+	"context"
 	"github.com/0xjasoncao/gin-scaffold/configs/config"
+	"github.com/0xjasoncao/gin-scaffold/internal/model"
 	"github.com/0xjasoncao/gin-scaffold/pkg/errors"
+	"github.com/0xjasoncao/gin-scaffold/pkg/logging"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -11,7 +14,7 @@ import (
 	"time"
 )
 
-func InitGorm(config config.Config) (*gorm.DB, error) {
+func InitGorm(ctx context.Context, config *config.Config) (*gorm.DB, func(), error) {
 
 	var dialect gorm.Dialector
 	c := config.Gorm
@@ -19,13 +22,14 @@ func InitGorm(config config.Config) (*gorm.DB, error) {
 	case "mysql":
 		dialect = mysql.Open(config.Mysql.DSN())
 	default:
-		return nil, errors.Errorf("unsupported database type: %s", c.Use)
+		return nil, func() {}, errors.Errorf("unsupported database type: %s", c.Use)
 	}
 	ormCfg := &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
-		Logger: logger.Discard,
+		Logger:                                   logger.Discard,
+		DisableForeignKeyConstraintWhenMigrating: true,
 	}
 
 	if c.Debug {
@@ -34,20 +38,30 @@ func InitGorm(config config.Config) (*gorm.DB, error) {
 
 	db, err := gorm.Open(dialect, ormCfg)
 	if err != nil {
-		return nil, err
+		return nil, func() {}, err
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		return nil, err
+		return nil, func() {}, err
 	}
 	err = sqlDB.Ping()
 	if err != nil {
-		return nil, err
+		return nil, func() {}, err
 	}
 	sqlDB.SetMaxOpenConns(c.MaxOpen)
 	sqlDB.SetMaxIdleConns(c.MaxIdle)
 	sqlDB.SetConnMaxLifetime(time.Duration(c.MaxLifetime) * time.Second)
 
-	return db, nil
+	if c.EnableAutoMigrate {
+		if strings.ToLower(c.Use) == "mysql" {
+			db.Set("gorm:table_options", "ENGINE=InnoDB")
+		}
+		err := db.AutoMigrate(model.Models()...)
+		if err != nil {
+			logging.WithContext(ctx).Sugar().Errorf("AutoMigrate failed, error:%v", err)
+		}
+	}
+
+	return db, func() {}, nil
 }

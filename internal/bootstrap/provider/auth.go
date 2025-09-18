@@ -26,8 +26,8 @@ func InitTokenService(config *config.Config,
 		Key:              cfg.Key,
 	}, store)
 	if err != nil {
-		return nil, nil, err
+		return nil, func() {}, err
 	}
-	return service, nil, nil
+	return service, func() {}, nil
 
 }

@@ -29,11 +29,12 @@ gorm:
   enable-auto-migrate: true      # Whether to automatically migrate database schema
   debug: true                    # Enable GORM debug logging
 
+
 mysql:
   host: 127.0.0.1                # MySQL host
   port: 3306                     # MySQL port
   user: root                     # MySQL username
-  password: root                 # MySQL password
+  password: Caoyu123.                 # MySQL password
   db-name: user                  # MySQL database name
   parameters: charset=utf8mb4&parseTime=True&loc=Local   # Additional MySQL connection parameters
 
@@ -43,13 +44,6 @@ jwt:
   store: memory                   # Where to store JWT (redis, memory, etc.)
   issuer: default
 
-cors:
-  enable: true
-  allow-origins: ["*"]
-  allow-methods: ["GET","POST","PUT","DELETE","PATCH"]
-  allow-headers: []
-  allow-credentials: true
-  max-age: 7200
 
 cache:
   use: memory

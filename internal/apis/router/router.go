@@ -7,12 +7,14 @@ import (
 	"github.com/0xjasoncao/gin-scaffold/pkg/token"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func NewRouter(
 	config *config.Config,
 	handler *handler.Handler,
 	tokenSrc token.Service,
+	db *gorm.DB,
 ) *gin.Engine {
 
 	//set gin run mode
@@ -30,13 +32,18 @@ func NewRouter(
 
 	//Trace
 	app.Use(middleware.Trace())
+
 	//Auth
 	app.Use(middleware.Auth(tokenSrc))
 	//CopyBody
-	app.Use(middleware.CopyBodyMiddleware())
+	app.Use(middleware.CopyBodyMiddleware(config.Http))
 	//Logger
 	app.Use(middleware.LoggerMiddleware())
 	// 配置CORS
+	if config.Cors.Enable {
+		app.Use(middleware.CORSMiddleware(config.Cors))
+
+	}
 
 	// v1 route
 	v1 := app.Group("api/v1")
