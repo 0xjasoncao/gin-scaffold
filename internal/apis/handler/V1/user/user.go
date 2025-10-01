@@ -5,18 +5,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserHandler struct {
+type Handler struct {
 }
 
-func NewUserHandler() *UserHandler {
-	return &UserHandler{}
+func NewHandler() *Handler {
+	return &Handler{}
 }
 
-func (*UserHandler) Login(ctx *gin.Context) {
-
-}
-
-func (*UserHandler) Info(ctx *gin.Context) {
+func (*Handler) Info(ctx *gin.Context) {
 
 	userInfo := map[string]string{
 		"userName": "JasonCao",

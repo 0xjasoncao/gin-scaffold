@@ -3,25 +3,25 @@ package middleware
 import "github.com/gin-gonic/gin"
 
 type Options struct {
-	AllowedPathPrefix    []string
-	NotAllowedPathPrefix []string
+	SkipPathPrefix    []string
+	NotSkipPathPrefix []string
 }
 
-type OptionsFunc func(opt *Options)
+type SkipFunc func(opt *Options)
 
-func AllowPathPrefix(prefix ...string) OptionsFunc {
+func SkipPathPrefix(prefix ...string) SkipFunc {
 	return func(opt *Options) {
-		opt.AllowedPathPrefix = prefix
+		opt.SkipPathPrefix = prefix
 	}
 }
 
-func NotAllowPathPrefix(prefix ...string) OptionsFunc {
+func NotSkipPathPrefix(prefix ...string) SkipFunc {
 	return func(opt *Options) {
-		opt.NotAllowedPathPrefix = prefix
+		opt.NotSkipPathPrefix = prefix
 	}
 }
 
-func NeedSkip(c *gin.Context, optionsFunc ...OptionsFunc) bool {
+func NeedSkip(c *gin.Context, optionsFunc ...SkipFunc) bool {
 	var o Options
 	for _, opt := range optionsFunc {
 		opt(&o)
@@ -29,12 +29,12 @@ func NeedSkip(c *gin.Context, optionsFunc ...OptionsFunc) bool {
 	path := c.Request.URL.Path
 	pathLen := len(path)
 
-	for _, p := range o.AllowedPathPrefix {
+	for _, p := range o.SkipPathPrefix {
 		if pl := len(p); pathLen >= pl && path[:pl] == p {
 			return true
 		}
 	}
-	for _, p := range o.NotAllowedPathPrefix {
+	for _, p := range o.NotSkipPathPrefix {
 		if pl := len(p); pathLen >= pl && path[:pl] == p {
 			return false
 		}

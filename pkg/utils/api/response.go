@@ -91,7 +91,7 @@ func ResError(c *gin.Context, err error) {
 	}
 
 	if res == nil {
-		res = errors.NewInternalError("Internal server error").WithError(err)
+		res = errors.NewInternal("Internal server error").WithError(err)
 	}
 
 	if status := res.StatusCode; status >= 400 && status < 500 {

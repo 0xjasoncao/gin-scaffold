@@ -3,7 +3,7 @@ package provider
 import (
 	"context"
 	"github.com/0xjasoncao/gin-scaffold/configs/config"
-	"github.com/0xjasoncao/gin-scaffold/internal/model"
+	"github.com/0xjasoncao/gin-scaffold/internal/repository/model"
 	"github.com/0xjasoncao/gin-scaffold/pkg/errors"
 	"github.com/0xjasoncao/gin-scaffold/pkg/logging"
 	"gorm.io/driver/mysql"
@@ -28,6 +28,7 @@ func InitGorm(ctx context.Context, config *config.Config) (*gorm.DB, func(), err
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
+		SkipDefaultTransaction:                   true,
 		Logger:                                   logger.Discard,
 		DisableForeignKeyConstraintWhenMigrating: true,
 	}

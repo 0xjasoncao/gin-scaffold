@@ -36,13 +36,17 @@ func Load(configDir string) error {
 
 	for _, entry := range entries {
 		fullPath := filepath.Join(configDir, entry.Name())
-		fl := loader.NewFileLoader(fullPath)
+		fl := loader.NewLocalConfigLoader(fullPath)
 		data, err := fl.Load()
 		if err != nil {
 			return err
 		}
 		index := strings.LastIndex(fullPath, ".")
-		if err = parser.GetParser(fullPath[index+1:]).Parse(data, C); err != nil {
+		getParser, err := parser.GetParser(fullPath[index+1:])
+		if err != nil {
+			return err
+		}
+		if err = getParser.Parse(data, C); err != nil {
 			return err
 		}
 	}
@@ -56,7 +60,6 @@ func (c *Config) PrintWithJSON() {
 	}
 	b, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {
-		// 错误信息增加视觉提示
 		fmt.Println("[CONFIG] Failed to marshal config to JSON:")
 		fmt.Println("Error:", err.Error())
 		return

@@ -29,12 +29,13 @@ func NewRouter(
 			gzip.WithExcludedExtensions(gzipConf.ExcludedExtensions),
 			gzip.WithExcludedPaths(gzipConf.ExcludedPath)))
 	}
-
+	app.NoMethod(middleware.NoMethod())
+	app.NoRoute(middleware.NoRoute())
 	//Trace
 	app.Use(middleware.Trace())
 
 	//Auth
-	app.Use(middleware.Auth(tokenSrc))
+	app.Use(middleware.Auth(tokenSrc, middleware.SkipPathPrefix("/api/v1/auth/login")))
 	//CopyBody
 	app.Use(middleware.CopyBodyMiddleware(config.Http))
 	//Logger
@@ -48,9 +49,9 @@ func NewRouter(
 	// v1 route
 	v1 := app.Group("api/v1")
 	{
-		group := v1.Group("/user")
+		group := v1.Group("/auth")
 		{
-			group.GET("/info", handler.V1.User.Info)
+			group.POST("/login", handler.V1.Auth.Login)
 		}
 	}
 

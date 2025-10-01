@@ -9,10 +9,10 @@ import (
 
 const TraceId = "X-Request-Id"
 
-func Trace(optionsFunc ...OptionsFunc) gin.HandlerFunc {
+func Trace(skipFunc ...SkipFunc) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-		if NeedSkip(c, optionsFunc...) {
+		if NeedSkip(c, skipFunc...) {
 			c.Next()
 			return
 		}

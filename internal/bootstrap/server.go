@@ -37,7 +37,7 @@ func RunServer(ctx context.Context, options *Options) error {
 EXIT:
 	for {
 		sig := <-sc
-		logging.WithContext(ctx).Sugar().Infof("catched signal[%s]", sig.String())
+		logging.WithContext(ctx).Sugar().Infof("Catched signal[%s].", sig.String())
 		switch sig {
 		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
 			state = 0
@@ -49,7 +49,7 @@ EXIT:
 	}
 
 	cleanFunc()
-	logging.WithContext(ctx).Sugar().Infof("stopping server")
+	logging.WithContext(ctx).Sugar().Infof("Graceful shutdown completed successfully. Service is now stopped.")
 	time.Sleep(time.Second)
 	os.Exit(state)
 	return nil
@@ -68,6 +68,8 @@ func runServer(ctx context.Context, options *Options) (func(), error) {
 	if err != nil {
 		return nil, err
 	}
+	logging.Logger().Sugar().Infof("Loading configuration from %s ", options.ConfigFileDir)
+	logging.Logger().Sugar().Info(" Logger initialized successfully")
 	//Init SonyFlake
 	sonyflakex.InitSonyFlake(config.C)
 
@@ -101,7 +103,7 @@ func initHttpServer(ctx context.Context, handler http.Handler) (func(), error) {
 	}
 
 	go func() {
-		logging.WithContext(ctx).Sugar().Info("HTTP server is running at ", addr)
+		logging.WithContext(ctx).Sugar().Infof("HTTP server is running at %s", addr)
 		err := srv.ListenAndServe()
 		if err != nil && !errors.As(http.ErrServerClosed, &err) {
 			panic(err)

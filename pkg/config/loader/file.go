@@ -5,20 +5,20 @@ import (
 	"os"
 )
 
-// FileLoader 配置文件加载器
-type FileLoader struct {
+// LocalConfigLoader 本地配置文件加载器
+type LocalConfigLoader struct {
 	location string
 }
 
-func NewFileLoader(path string) *FileLoader {
-	fl := &FileLoader{location: path}
+func NewLocalConfigLoader(path string) *LocalConfigLoader {
+	fl := &LocalConfigLoader{location: path}
 	return fl
 }
 
-func (f *FileLoader) Load() ([]byte, error) {
+func (f *LocalConfigLoader) Load() ([]byte, error) {
 	return os.ReadFile(f.location)
 }
 
-func (f *FileLoader) Watch(ctx context.Context, onChange func([]byte)) error {
+func (f *LocalConfigLoader) Watch(ctx context.Context, onChange func([]byte)) error {
 	return nil
 }

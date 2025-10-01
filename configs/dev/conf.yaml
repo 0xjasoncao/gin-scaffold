@@ -21,6 +21,7 @@ app:
   name: "Gin Scaffold"          # Application name
   print-config: true           # Whether to print configuration on startup
 
+# Gorm
 gorm:
   use: mysql                     # Database driver type
   max-idle: 10                   # Maximum idle connections in the connection pool

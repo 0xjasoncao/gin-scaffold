@@ -1,9 +1,13 @@
 package handler
 
-import "github.com/0xjasoncao/gin-scaffold/internal/apis/handler/V1/user"
+import (
+	"github.com/0xjasoncao/gin-scaffold/internal/apis/handler/V1/auth"
+	"github.com/0xjasoncao/gin-scaffold/internal/apis/handler/V1/user"
+)
 
 type V1 struct {
-	User *user.UserHandler
+	User *user.Handler
+	Auth *auth.Handler
 }
 
 type Handler struct {

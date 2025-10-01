@@ -2,6 +2,7 @@ package errors
 
 import (
 	"fmt"
+	"github.com/0xjasoncao/gin-scaffold/pkg/validatorx"
 	errors2 "github.com/pkg/errors"
 	"net/http"
 )
@@ -54,25 +55,11 @@ func NewResponseError(code, statusCode int, message string, args ...interface{})
 	}
 }
 
-// WrapResponseError wraps an existing error with business and HTTP status information
-// Creates a new ResponseError that preserves the original error context
-func WrapResponseError(err error, code, statusCode int, message string, args ...interface{}) *ResponseError {
-	if err == nil {
-		return nil
-	}
-	return &ResponseError{
-		Code:       code,
-		StatusCode: statusCode,
-		Message:    fmt.Sprintf(message, args...),
-		Err:        err,
-	}
-}
-
 // Predefined error constructors for common error scenarios
 // These provide consistent error codes while allowing custom messages
 
-// NewInternalError creates a 500-level error for server-side issues
-func NewInternalError(message string, args ...interface{}) *ResponseError {
+// NewInternal creates a 500-level error for server-side issues
+func NewInternal(message string, args ...interface{}) *ResponseError {
 	return NewResponseError(CodeInternalError, http.StatusInternalServerError, message, args...)
 }
 
@@ -104,6 +91,17 @@ func NewUnauthorized(message string, args ...interface{}) *ResponseError {
 // NewMethodNotAllowed creates a 405-level error for unsupported HTTP methods
 func NewMethodNotAllowed(message string, args ...interface{}) *ResponseError {
 	return NewResponseError(CodeMethodNotAllowed, http.StatusMethodNotAllowed, message, args...)
+}
+
+func NewInvalidParams(err any) *ResponseError {
+	switch msg := err.(type) {
+	case error:
+		return NewBadRequest(validatorx.ZhTranslate(msg))
+	case string:
+		return NewBadRequest(msg)
+	default:
+		return NewBadRequest("%v", msg)
+	}
 }
 
 // Chainable modification methods

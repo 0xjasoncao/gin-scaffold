@@ -2,6 +2,7 @@ package parser
 
 import (
 	"encoding/json"
+	"github.com/0xjasoncao/gin-scaffold/pkg/errors"
 	"github.com/BurntSushi/toml"
 	"gopkg.in/yaml.v3"
 )
@@ -41,15 +42,15 @@ var (
 	})
 )
 
-func GetParser(fileType string) Parser {
+func GetParser(fileType string) (Parser, error) {
 	switch fileType {
 	case YAML, YML:
-		return YAMLParser
+		return YAMLParser, nil
 	case JSON:
-		return JSONParser
+		return JSONParser, nil
 	case TOML:
-		return TOMLParser
+		return TOMLParser, nil
 	default:
-		return nil
+		return nil, errors.Errorf("unsupported file type: %q", fileType)
 	}
 }

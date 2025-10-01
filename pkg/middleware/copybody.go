@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CopyBodyMiddleware(cfg config.Http, optionsFunc ...OptionsFunc) gin.HandlerFunc {
+func CopyBodyMiddleware(cfg config.Http, skipFunc ...SkipFunc) gin.HandlerFunc {
 
 	var maxMemory int64 = 10 << 20 // 10 MB
 	if v := cfg.MaxContentLength; v > 0 {
@@ -20,7 +20,7 @@ func CopyBodyMiddleware(cfg config.Http, optionsFunc ...OptionsFunc) gin.Handler
 
 	return func(c *gin.Context) {
 
-		if NeedSkip(c, optionsFunc...) {
+		if NeedSkip(c, skipFunc...) {
 			c.Next()
 			return
 		}

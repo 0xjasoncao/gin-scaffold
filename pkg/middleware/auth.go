@@ -8,9 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Auth(ts token.Service, optionsFunc ...OptionsFunc) gin.HandlerFunc {
+func Auth(ts token.Service, skipFunc ...SkipFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if NeedSkip(c, optionsFunc...) {
+		if NeedSkip(c, skipFunc...) {
 			c.Next()
 			return
 		}
