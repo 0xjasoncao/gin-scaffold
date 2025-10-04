@@ -19,6 +19,6 @@ func (*Handler) Info(ctx *gin.Context) {
 		"email":    "codecy2001@gmail.com",
 	}
 
-	api.ResSuccess(ctx, userInfo)
+	api.ResData(ctx, userInfo)
 
 }

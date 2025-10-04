@@ -5,10 +5,10 @@ package bootstrap
 
 import (
 	"context"
+
 	"github.com/0xjasoncao/gin-scaffold/configs/config"
 	"github.com/0xjasoncao/gin-scaffold/internal/apis/handler"
-	"github.com/0xjasoncao/gin-scaffold/internal/apis/handler/V1/auth"
-	"github.com/0xjasoncao/gin-scaffold/internal/apis/handler/V1/user"
+	"github.com/0xjasoncao/gin-scaffold/internal/repository"
 	"github.com/0xjasoncao/gin-scaffold/internal/service"
 
 	"github.com/0xjasoncao/gin-scaffold/internal/apis/router"
@@ -16,21 +16,12 @@ import (
 	"github.com/google/wire"
 )
 
-var RepoProviderSet = wire.NewSet()
-
-var HandlerProviderSet = wire.NewSet(
-	user.NewHandler,
-	auth.NewHandler,
-	wire.Struct(new(handler.V1), "*"),
-	wire.Struct(new(handler.Handler), "*"),
-)
-
 var ProviderSet = wire.NewSet(
 	provider.BasicProviderSet,
 	router.NewRouter,
-	RepoProviderSet,
+	repository.ProviderSet,
 	service.ProviderSet,
-	HandlerProviderSet,
+	handler.ProviderSet,
 	wire.Struct(new(ApiInjector), "*"),
 )
 

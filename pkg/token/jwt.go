@@ -2,14 +2,15 @@ package token
 
 import (
 	"context"
+	"time"
+
 	"github.com/0xjasoncao/gin-scaffold/pkg/cache"
 	"github.com/0xjasoncao/gin-scaffold/pkg/errors"
 	"github.com/golang-jwt/jwt/v5"
-	"time"
 )
 
 type Service interface {
-	IssuingToken(ctx context.Context, userId string) (string, error)
+	IssuingToken(ctx context.Context, userId string) (*IssuingTokenInfo, error)
 	DestroyToken(ctx context.Context, token string) error
 	Parse(ctx context.Context, token string) (*Claims, error)
 }
@@ -47,20 +48,39 @@ type JwtToken struct {
 	Store
 }
 
+type IssuingTokenInfo struct {
+	ExpiresAt   int64  `json:"expires_at"`
+	AccessToken string `json:"access_token,omitempty"`
+	IssuedAt    int64  `json:"issued_at"`
+}
+
 // IssuingToken generates a signed JWT token for the specified user ID
 // It uses HS256 algorithm for signing and includes both custom and standard claims
-func (j *JwtToken) IssuingToken(ctx context.Context, userId string) (string, error) {
+func (j *JwtToken) IssuingToken(ctx context.Context, userId string) (*IssuingTokenInfo, error) {
+
+	expiresAt := jwt.NewNumericDate(time.Now().Add(time.Duration(j.ExpiresAtSeconds) * time.Second))
+	issuedAt := jwt.NewNumericDate(time.Now())
 	claims := Claims{
 		UserID: userId,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(j.ExpiresAtSeconds) * time.Second)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ExpiresAt: expiresAt,
+			IssuedAt:  issuedAt,
 			Issuer:    j.Issuer,
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString([]byte(j.Key))
+	signedString, err := token.SignedString([]byte(j.Key))
+	if err != nil {
+		return nil, err
+	}
+
+	tokenInfo := &IssuingTokenInfo{
+		ExpiresAt:   expiresAt.Time.Unix(),
+		IssuedAt:    issuedAt.Time.Unix(),
+		AccessToken: signedString,
+	}
+	return tokenInfo, nil
 
 }
 
@@ -78,6 +98,12 @@ func (j *JwtToken) DestroyToken(ctx context.Context, tokenStr string) error {
 
 // Parse verifies a JWT token string and extracts the custom claims
 func (j *JwtToken) Parse(ctx context.Context, tokenStr string) (*Claims, error) {
+
+	if exists, err := j.Store.Check(ctx, tokenStr); err != nil {
+		return nil, err
+	} else if exists {
+		return nil, errors.New("expired token")
+	}
 	token, err := jwt.ParseWithClaims(
 		tokenStr, &Claims{},
 		func(token *jwt.Token) (interface{}, error) {

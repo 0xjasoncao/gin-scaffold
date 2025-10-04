@@ -1,15 +1,16 @@
 package logging
 
 import (
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
 	"github.com/0xjasoncao/gin-scaffold/configs/config"
 	"github.com/natefinch/lumberjack"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"os"
-	"path/filepath"
-	"strings"
-	"time"
 )
 
 // InitLogger initializes the global logger

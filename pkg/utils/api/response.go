@@ -2,18 +2,19 @@ package api
 
 import (
 	"encoding/json"
+	"net/http"
+	"reflect"
+
 	"github.com/0xjasoncao/gin-scaffold/pkg/errors"
 	"github.com/0xjasoncao/gin-scaffold/pkg/logging"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"net/http"
-	"reflect"
 )
 
 type ApiResponse struct {
 	Success bool        `json:"success"`
 	Code    int         `json:"code"`
-	Message string      `json:"message"`
+	Message string      `json:"message,omitempty"`
 	Data    interface{} `json:"data,omitempty"`
 	Meta    interface{} `json:"meta,omitempty"`
 }
@@ -24,7 +25,7 @@ type PaginationResponse struct {
 	PageSize int   `json:"pageSize,omitempty"` //每页数量
 }
 
-func ResSuccess(c *gin.Context, data interface{}) {
+func ResData(c *gin.Context, data interface{}) {
 	ResJSON(c, http.StatusOK, ApiResponse{
 		Success: true,
 		Code:    http.StatusOK,
@@ -35,6 +36,7 @@ func ResOK(c *gin.Context) {
 	ResJSON(c, http.StatusOK, ApiResponse{
 		Success: true,
 		Code:    http.StatusOK,
+		Message: "success",
 	})
 }
 
@@ -95,10 +97,10 @@ func ResError(c *gin.Context, err error) {
 	}
 
 	if status := res.StatusCode; status >= 400 && status < 500 {
-		logging.WithContext(ctx).Warn(res.Message, zap.Error(err))
+		logging.WithContext(ctx).WithOptions(zap.AddCallerSkip(1)).Warn(res.Message, zap.Error(err))
 	} else if status >= 500 {
 		ctx = logging.NewStackContext(ctx, err)
-		logging.WithContext(ctx).Error(res.Message, zap.Error(err))
+		logging.WithContext(ctx).WithOptions(zap.AddCallerSkip(1)).Error(res.Message, zap.Error(err))
 	}
 
 	ResJSON(c, res.StatusCode, ApiResponse{

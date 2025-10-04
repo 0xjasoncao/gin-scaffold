@@ -2,6 +2,7 @@ package sonyflakex
 
 import (
 	"fmt"
+
 	"github.com/0xjasoncao/gin-scaffold/configs/config"
 	"github.com/sony/sonyflake/v2"
 )

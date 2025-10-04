@@ -1,6 +1,9 @@
 package validatorx
 
 import (
+	"errors"
+	"strings"
+
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
@@ -8,7 +11,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	zh_translations "github.com/go-playground/validator/v10/translations/zh"
-	"strings"
 )
 
 type ValidationErrors validator.ValidationErrors
@@ -28,8 +30,10 @@ func init() {
 
 	}
 }
+
 func ZhTranslate(err error) string {
-	if errs, ok := err.(validator.ValidationErrors); ok {
+	var errs validator.ValidationErrors
+	if errors.As(err, &errs) {
 		var errMessages []string
 		for _, err := range errs {
 			errMessages = append(errMessages, err.Translate(zhTrans))

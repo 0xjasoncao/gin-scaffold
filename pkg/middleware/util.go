@@ -9,13 +9,13 @@ type Options struct {
 
 type SkipFunc func(opt *Options)
 
-func SkipPathPrefix(prefix ...string) SkipFunc {
+func SkippedPathPrefix(prefix ...string) SkipFunc {
 	return func(opt *Options) {
 		opt.SkipPathPrefix = prefix
 	}
 }
 
-func NotSkipPathPrefix(prefix ...string) SkipFunc {
+func NotSkippedPathPrefix(prefix ...string) SkipFunc {
 	return func(opt *Options) {
 		opt.NotSkipPathPrefix = prefix
 	}

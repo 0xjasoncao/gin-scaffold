@@ -3,11 +3,12 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/0xjasoncao/gin-scaffold/pkg/config/loader"
-	"github.com/0xjasoncao/gin-scaffold/pkg/config/parser"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/0xjasoncao/gin-scaffold/pkg/config/loader"
+	"github.com/0xjasoncao/gin-scaffold/pkg/config/parser"
 )
 
 var (

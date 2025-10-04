@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"mime"
+	"net/http"
+	"time"
+
 	"github.com/0xjasoncao/gin-scaffold/pkg/logging"
 	"github.com/0xjasoncao/gin-scaffold/pkg/utils/api"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"mime"
-	"net/http"
-	"time"
 )
 
 func LoggerMiddleware() gin.HandlerFunc {

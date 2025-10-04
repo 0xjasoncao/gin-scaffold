@@ -22,11 +22,11 @@ logger:
     # Regular error log file
     file:
       enabled: true               # Enable file logging
-      level: [warn, error ]       # Log levels written to this file
+      level: [ error ]       # Log levels written to this file
       format: json               # Output format: console|json
       path: "logs/error.log"      # Log file path
-      max-size: 100               # Maximum size of a single log file in MB
-      max-backup: 10              # Maximum number of backup files
+      max-size: 1               # Maximum size of a single log file in MB
+      max-backup: 30              # Maximum number of backup files
       max-age: 30                 # Maximum age of a log file in days
       compress: true              # Compress backup files
       encoder-config:             # Encoder configuration for file output

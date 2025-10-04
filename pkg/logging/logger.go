@@ -3,6 +3,7 @@ package logging
 import (
 	"context"
 	"fmt"
+
 	"go.uber.org/zap"
 )
 
@@ -12,6 +13,7 @@ const (
 	UserIDKey  = "user_id"  // Key for user ID
 	TagKey     = "tag"      // Key for custom tags
 	StackKey   = "stack"    // Key for stack trace
+
 )
 
 // Context key types (unexported) to avoid collisions with other context keys.

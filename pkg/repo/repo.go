@@ -2,6 +2,7 @@ package BasicRepo
 
 import (
 	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -22,15 +23,15 @@ func (r *BasicRepo[T]) Model(ctx context.Context) *gorm.DB {
 }
 
 // FindById 根据主键查询单条记录
-func (r *BasicRepo[T]) FindById(ctx context.Context, id any) *T {
+func (r *BasicRepo[T]) FindById(ctx context.Context, id any) (*T, error) {
 
-	var item *T
-	err := r.Model(ctx).Limit(1).Find(item, id).Error
+	var item T
+	err := r.Model(ctx).First(&item, id).Error
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
-	return item
+	return &item, nil
 }
 
 // FindByIds 根据主键查询多条记录
@@ -65,7 +66,7 @@ func (r *BasicRepo[T]) FindAll(ctx context.Context, arg ...func(*gorm.DB)) ([]*T
 // FindByConditions 根据条件查询一条数据
 func (r *BasicRepo[T]) FindByConditions(ctx context.Context, fn func(tx *gorm.DB) *gorm.DB) (*T, error) {
 	var item *T
-	if err := fn(r.Db.WithContext(ctx)).Find(&item).Error; err != nil {
+	if err := fn(r.Db.WithContext(ctx)).First(&item).Error; err != nil {
 		return nil, err
 	}
 
@@ -76,7 +77,7 @@ func (r *BasicRepo[T]) FindByConditions(ctx context.Context, fn func(tx *gorm.DB
 func (r *BasicRepo[T]) FindByWhere(ctx context.Context, where string, args ...any) (*T, error) {
 
 	var item *T
-	err := r.Model(ctx).Where(where, args...).First(item).Error
+	err := r.Model(ctx).Debug().Where(where, args...).First(&item).Error
 	if err != nil {
 		return nil, err
 	}

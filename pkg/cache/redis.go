@@ -3,9 +3,10 @@ package cache
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/0xjasoncao/gin-scaffold/pkg/logging"
 	"github.com/redis/go-redis/v9"
-	"time"
 )
 
 // Redis Redis缓存实现
@@ -13,10 +14,9 @@ type Redis struct {
 	Client redis.UniversalClient
 }
 
-// NewRedis 创建单节点Redis缓存实例（带错误详情日志）
+// NewRedis 创建单节点Redis缓存实例
 func NewRedis(ctx context.Context, addr string, password string, db int) (*Redis, func(), error) {
 
-	// 1. 初始化客户端（明确配置信息）
 	cli := redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: password,
@@ -33,7 +33,6 @@ func NewRedis(ctx context.Context, addr string, password string, db int) (*Redis
 		return nil, nil, fmt.Errorf("connect redis single node failed: %w", err)
 	}
 
-	// 5. 成功日志（可选，便于调试环境确认连接状态）
 	logging.WithContext(ctx).Sugar().Infof(
 		"redis single node connected successfully: addr=%s, db=%d, ping response=%s",
 		addr, db, pingCmd.Val(),
@@ -56,7 +55,7 @@ func NewRedis(ctx context.Context, addr string, password string, db int) (*Redis
 	return &Redis{Client: cli}, cleanup, nil
 }
 
-// NewClusterRedis 创建Redis集群实例（带错误详情日志）
+// NewClusterRedis 创建Redis集群实例
 func NewClusterRedis(ctx context.Context, addrs []string, password string) (*Redis, func(), error) {
 
 	cli := redis.NewClusterClient(&redis.ClusterOptions{

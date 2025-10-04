@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+
 	"github.com/0xjasoncao/gin-scaffold/configs/config"
 	"github.com/0xjasoncao/gin-scaffold/pkg/cache"
 	"github.com/0xjasoncao/gin-scaffold/pkg/logging"

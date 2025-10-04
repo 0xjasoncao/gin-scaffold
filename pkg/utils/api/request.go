@@ -1,8 +1,10 @@
 package api
 
 import (
-	"github.com/gin-gonic/gin"
 	"strings"
+
+	"github.com/0xjasoncao/gin-scaffold/pkg/errors"
+	"github.com/gin-gonic/gin"
 )
 
 const (
@@ -17,4 +19,12 @@ func GetToken(c *gin.Context) string {
 		token = auth[len(prefix):]
 	}
 	return token
+}
+
+func ParseJSON(c *gin.Context, obj any) error {
+	err := c.ShouldBindJSON(obj)
+	if err != nil {
+		return errors.NewInvalidParams(err)
+	}
+	return nil
 }

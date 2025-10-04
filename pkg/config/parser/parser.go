@@ -2,6 +2,7 @@ package parser
 
 import (
 	"encoding/json"
+
 	"github.com/0xjasoncao/gin-scaffold/pkg/errors"
 	"github.com/BurntSushi/toml"
 	"gopkg.in/yaml.v3"

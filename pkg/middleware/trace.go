@@ -1,10 +1,11 @@
 package middleware
 
 import (
+	"strconv"
+
 	"github.com/0xjasoncao/gin-scaffold/pkg/logging"
 	"github.com/0xjasoncao/gin-scaffold/pkg/sonyflakex"
 	"github.com/gin-gonic/gin"
-	"strconv"
 )
 
 const TraceId = "X-Request-Id"

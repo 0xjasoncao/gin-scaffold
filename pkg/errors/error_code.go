@@ -1,7 +1,5 @@
 package errors
 
-// Predefined business error codes
-// These codes follow a structured pattern for easier identification
 const (
 	CodeInternalError         = 50001 // Internal server error
 	CodeNotFound              = 40401 // Resource not found

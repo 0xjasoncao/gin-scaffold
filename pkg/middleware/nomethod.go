@@ -9,5 +9,6 @@ import (
 func NoMethod() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		api.ResError(c, errors.NewMethodNotAllowed("requested method not allowed"))
+		return
 	}
 }

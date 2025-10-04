@@ -2,9 +2,10 @@ package errors
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/0xjasoncao/gin-scaffold/pkg/validatorx"
 	errors2 "github.com/pkg/errors"
-	"net/http"
 )
 
 // Define alias

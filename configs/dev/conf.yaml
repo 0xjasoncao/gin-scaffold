@@ -3,7 +3,7 @@ http:
   port: 8080                    # Server port
   max-content-length: 20        # Maximum allowed request body size in MB
   read-timeout: 5               # Maximum time to read request header and body (seconds)
-  write-timeout: 10             # Maximum time to write response (seconds)
+  write-timeout: 30            # Maximum time to write response (seconds)
   idle-timeout: 15              # Maximum idle time for connections (seconds)
   max-header-bytes: 2           # Maximum allowed request header size in MB
   gzip:

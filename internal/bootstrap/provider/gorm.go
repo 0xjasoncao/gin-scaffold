@@ -2,16 +2,17 @@ package provider
 
 import (
 	"context"
+	"strings"
+	"time"
+
 	"github.com/0xjasoncao/gin-scaffold/configs/config"
-	"github.com/0xjasoncao/gin-scaffold/internal/repository/model"
+	"github.com/0xjasoncao/gin-scaffold/internal/domain"
 	"github.com/0xjasoncao/gin-scaffold/pkg/errors"
 	"github.com/0xjasoncao/gin-scaffold/pkg/logging"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
-	"strings"
-	"time"
 )
 
 func InitGorm(ctx context.Context, config *config.Config) (*gorm.DB, func(), error) {
@@ -22,7 +23,7 @@ func InitGorm(ctx context.Context, config *config.Config) (*gorm.DB, func(), err
 	case "mysql":
 		dialect = mysql.Open(config.Mysql.DSN())
 	default:
-		return nil, func() {}, errors.Errorf("unsupported database type: %s", c.Use)
+		return nil, func() {}, errors.Errorf("Unsupported database type: %s", c.Use)
 	}
 	ormCfg := &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
@@ -58,9 +59,11 @@ func InitGorm(ctx context.Context, config *config.Config) (*gorm.DB, func(), err
 		if strings.ToLower(c.Use) == "mysql" {
 			db.Set("gorm:table_options", "ENGINE=InnoDB")
 		}
-		err := db.AutoMigrate(model.Models()...)
+		err := db.AutoMigrate(domain.Models()...)
 		if err != nil {
-			logging.WithContext(ctx).Sugar().Errorf("AutoMigrate failed, error:%v", err)
+			logging.WithContext(ctx).Sugar().Errorf("Database auto-migration failed: %v", err)
+		} else {
+			logging.WithContext(ctx).Sugar().Info("Database auto-migration completed successfully")
 		}
 	}
 

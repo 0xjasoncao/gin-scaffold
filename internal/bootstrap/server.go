@@ -4,15 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/0xjasoncao/gin-scaffold/configs/config"
-	"github.com/0xjasoncao/gin-scaffold/pkg/logging"
-	"github.com/0xjasoncao/gin-scaffold/pkg/sonyflakex"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/0xjasoncao/gin-scaffold/configs/config"
+	"github.com/0xjasoncao/gin-scaffold/pkg/logging"
+	"github.com/0xjasoncao/gin-scaffold/pkg/sonyflakex"
+	"github.com/gin-gonic/gin"
 )
 
 type Options struct {
@@ -61,15 +62,14 @@ func runServer(ctx context.Context, options *Options) (func(), error) {
 	if err != nil {
 		return nil, err
 	}
-	config.C.PrintWithJSON()
-
 	//Init Logger
 	err = logging.InitLogger(config.C)
 	if err != nil {
 		return nil, err
 	}
-	logging.Logger().Sugar().Infof("Loading configuration from %s ", options.ConfigFileDir)
-	logging.Logger().Sugar().Info(" Logger initialized successfully")
+	logging.WithContext(ctx).Sugar().Infof("Loading configuration from %s ...", options.ConfigFileDir)
+	config.C.PrintWithJSON()
+	logging.WithContext(ctx).Sugar().Info(" Logger initialized successfully")
 	//Init SonyFlake
 	sonyflakex.InitSonyFlake(config.C)
 

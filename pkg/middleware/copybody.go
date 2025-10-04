@@ -2,11 +2,12 @@ package middleware
 
 import (
 	"bytes"
+	"io"
+	"net/http"
+
 	"github.com/0xjasoncao/gin-scaffold/configs/config"
 	"github.com/0xjasoncao/gin-scaffold/pkg/errors"
 	"github.com/0xjasoncao/gin-scaffold/pkg/utils/api"
-	"io"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )

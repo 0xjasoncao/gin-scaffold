@@ -2,8 +2,9 @@ package token
 
 import (
 	"context"
-	"github.com/0xjasoncao/gin-scaffold/pkg/cache"
 	"time"
+
+	"github.com/0xjasoncao/gin-scaffold/pkg/cache"
 )
 
 type Store interface {
