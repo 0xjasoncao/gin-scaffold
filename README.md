@@ -42,7 +42,7 @@ Gin-Scaffold 是一个基于 Gin 框架构建的工程化后端脚手架，整�
 ### 安装依赖
 ```bash
 # 克隆项目
-git clone https://github.com/0xjasoncao/gin-scaffold
+git clone https://github.com/0xjasoncao/gin-scaffold.git
 cd gin-scaffold
 
 # 安装依赖
