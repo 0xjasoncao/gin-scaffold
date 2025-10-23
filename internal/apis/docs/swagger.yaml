@@ -1,0 +1,119 @@
+definitions:
+  api.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+      meta: {}
+      success:
+        type: boolean
+    type: object
+  request.LoginRequest:
+    properties:
+      mobile:
+        type: string
+      password:
+        maxLength: 16
+        minLength: 6
+        type: string
+      verify_code:
+        type: string
+    required:
+    - mobile
+    - password
+    - verify_code
+    type: object
+  response.LoginResponse:
+    properties:
+      gender:
+        type: integer
+      id:
+        type: string
+      nick_name:
+        type: string
+      token_info:
+        $ref: '#/definitions/token.IssuingTokenInfo'
+      user_name:
+        type: string
+    type: object
+  token.IssuingTokenInfo:
+    properties:
+      access_token:
+        description: Access token string
+        type: string
+      expires_at:
+        description: Expiration timestamp (Unix seconds)
+        type: integer
+      issued_at:
+        description: Issue timestamp (Unix seconds)
+        type: integer
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+paths:
+  /system/v1/user/login/:
+    post:
+      consumes:
+      - application/json
+      description: login by mobile
+      parameters:
+      - description: 登录参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.LoginResponse'
+              type: object
+      summary: login
+      tags:
+      - user
+  /system/v1/user/logout:
+    post:
+      consumes:
+      - application/json
+      description: login by mobile
+      parameters:
+      - description: access_token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: logout
+      tags:
+      - user
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

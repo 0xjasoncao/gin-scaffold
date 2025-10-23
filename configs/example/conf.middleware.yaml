@@ -1,0 +1,47 @@
+middleware:
+  gzip:
+    enable: true                # Enable gzip compression
+    excluded-extensions: [ # File extensions excluded from gzip
+      "jpg", "jpeg", "png", "gif", "webp", "bmp",
+      "mp4", "webm", "avi", "mov", "mp3", "wav",
+      "pdf", "doc", "docx", "zip", "rar", "7z",
+      "woff", "woff2", "ttf", "otf"
+    ]
+    excluded-path: [ ]           # Paths excluded from gzip
+  cors:
+    enable: true
+    allow-origins: [ "*" ]
+    allow-methods: [ "GET","POST","PUT","DELETE","PATCH" ]
+    allow-headers: [ ]
+    allow-credentials: true
+    max-age: 7200
+  logger:
+    enable: true
+  auth:
+    enable: true
+    skip-path-prefix: ["/api/system/v1/user/login", "/api/docs/swagger"]
+  trace-id:
+    enable: true
+  copy-body:
+    skip-path-prefix: ["/api/docs/swagger"]
+    enable: true
+    max-content-length: 20
+  #请求限流器，可根据多个规则进行限流，内部使用redis+lua实现窗口限流
+  rate-limit:
+    enable: true
+    skip-path-prefix: ["/api/docs/swagger"]
+    #限流规则, 当urlPattern命中requestURL成功，redisKey= strategyKeyPrefix+md5(urlPattern)+ruleIndex
+    # 示例：单个ip 60秒内限制请求 /api 前缀的路由30次
+    # url-pattern: "/api/.*" #url正则匹配，为空失效！
+    # period: 60 #窗口时间，单位秒
+    # strategy: ip #限流策略(ip|user)
+    # max-count: 30 #窗口时间内最大通行次数
+    rules:
+      - url-pattern: "/api/.*"
+        period: 60
+        strategy: ip
+        max-count: 100
+      - url-pattern: "/api/.*"
+        period: 300
+        strategy: ip
+        max-count: 1000

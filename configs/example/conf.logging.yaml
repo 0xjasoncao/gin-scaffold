@@ -1,0 +1,43 @@
+logger:
+  outputs:
+    # Console output (stdout)
+    - name: console
+      enabled: true               # Enable console logging
+      level: [ debug, info, warn, error ]  # Log levels to output to console
+      format: console             # Output format: console|json
+      path: "stderr"              # Output path for console logs
+      encoder-config: # Encoder configuration for console output
+        time-key: time            # Key name for timestamp
+        level-key: level          # Key name for log level
+        name-key: logger          # Key name for logger name
+        caller-key: caller        # Key name for caller info
+        message-key: msg          # Key name for log message
+        stacktrace-key: stacktrace # Key name for stacktrace
+        line-ending: "\n"         # Line ending
+        level-encoder: capitalColor # Level display: capital letters with colors
+        time-layout: "2006-01-02 15:04:05" # Time format
+        duration-encoder: string   # Duration encoding format
+        caller-encoder: short      # Caller encoding style: short path
+
+    # Regular error log file
+    - name: file
+      enabled: true               # Enable file logging
+      level: [ error ]       # Log levels written to this file
+      format: json               # Output format: console|json
+      path: "logs/error.log"      # Log file path
+      max-size: 50               # Maximum size of a single log file in MB
+      max-backup: 30              # Maximum number of backup files
+      max-age: 30                 # Maximum age of a log file in days
+      compress: true              # Compress backup files
+      encoder-config: # Encoder configuration for file output
+        time-key: time            # Key name for timestamp
+        level-key: level          # Key name for log level
+        name-key: logger          # Key name for logger name
+        caller-key: caller        # Key name for caller info
+        message-key: msg          # Key name for log message
+        stacktrace-key: stacktrace # Key name for stacktrace
+        line-ending: "\n"         # Line ending
+        level-encoder: capital     # Level encoding style: capital letters
+        time-layout: "2006-01-02 15:04:05" # Time format
+        duration-encoder: string   # Duration encoding format
+        caller-encoder: full       # Caller encoding style: full path

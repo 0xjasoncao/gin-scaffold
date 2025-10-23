@@ -1,0 +1,51 @@
+http:
+  host: 0.0.0.0                 # Server host to bind
+  port: 8080                    # Server port
+  read-timeout: 5               # Maximum time to read request header and body (seconds)
+  write-timeout: 30            # Maximum time to write response (seconds)
+  idle-timeout: 15              # Maximum idle time for connections (seconds)
+  max-header-bytes: 2           # Maximum allowed request header size in MB
+
+app:
+  run-mode: release             # Run mode (debug|test|release)
+  print-config: true           # Whether to print configuration on startup
+  router:
+    global-prefix: /api
+    print-with-start: true
+  swagger:
+    enable: true
+    auth:
+      enable: true
+      account: admin
+      password: 123456
+
+redis:
+  addrs: ["127.0.0.8:6379"]           # Redis address (single instance mode)
+  password: "123456."                   # Redis password
+  dbs: [0,1,2]                       # Redis database index (single instance mode)
+
+
+jwt:
+  key: bzOojgQuL6notiVZHnYIe3MeayB5cRdtHKUlqDltb9A= # JWT signing secret key
+  expires-at-seconds: 3600             # JWT expiration time in seconds
+  issuer: default
+
+
+# Gorm
+gorm:
+  use: mysql                     # Database driver type
+  max-idle: 10                   # Maximum idle connections in the connection pool
+  max-open: 100                  # Maximum open connections in the connection pool
+  max-life-time: 1               # Maximum lifetime of a connection in hours
+  enable-auto-migrate: true      # Whether to automatically migrate database schema
+  debug: true                    # Enable GORM debug logging
+  # Mysql
+  mysql:
+    host: 127.0.0.1                # MySQL host
+    port: 3306                     # MySQL port
+    user: root                     # MySQL username
+    password: 123456.                 # MySQL password
+    db-name: admin                  # MySQL database name
+    parameters: charset=utf8mb4&parseTime=True&loc=Local   # Additional MySQL connection parameters
+
+
