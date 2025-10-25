@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gin-scaffold/pkg/api"
 	"gin-scaffold/pkg/errorsx"
-	"gin-scaffold/pkg/limit"
+	"gin-scaffold/pkg/limiter"
 	"gin-scaffold/pkg/logging"
 	"gin-scaffold/pkg/utils/encryptutil"
 	"github.com/gin-gonic/gin"
@@ -35,7 +35,7 @@ const (
 )
 
 func RateLimitMiddleware(redisClient redis.UniversalClient, conf *RateLimiterConfig) gin.HandlerFunc {
-	limiter := limit.NewRedisPeriodLimiter(redisClient)
+	limiter := limiter.NewRedisPeriodLimiter(redisClient)
 
 	//预编译正则 避免每次请求编译
 	for i := range conf.Rules {

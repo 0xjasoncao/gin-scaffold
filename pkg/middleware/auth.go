@@ -20,6 +20,7 @@ func Auth(ts token.Service, config *AuthConfig) gin.HandlerFunc {
 			c.Next()
 			return
 		}
+		// Request Header: "Authorization": Bearer JWT
 		tokenStr := api.GetToken(c)
 		if tokenStr == "" {
 			api.ResError(c, errorsx.NewUnauthorized("Unauthorized access."))

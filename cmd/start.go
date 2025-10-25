@@ -10,13 +10,13 @@ import (
 func Start(ctx context.Context, version string) *cli.Command {
 	return &cli.Command{
 		Name:  "start",
-		Usage: "Start server",
+		Usage: "Start the server",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "conf",
 				Required: true,
 				Aliases:  []string{"c"},
-				Usage:    "Runtime configuration",
+				Usage:    "Runtime configuration dir",
 			},
 		},
 		Action: func(c *cli.Context) error {

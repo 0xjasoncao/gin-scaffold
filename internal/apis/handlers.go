@@ -1,19 +1,22 @@
 package apis
 
 import (
-	"gin-scaffold/internal/apis/docs"
-	"gin-scaffold/internal/apis/system"
-	"github.com/google/wire"
+	"gin-scaffold/internal/apis/handler/swagger"
+	"gin-scaffold/internal/apis/handler/system"
+	"github.com/gin-gonic/gin"
 )
 
-type RouterHandlers struct {
-	Swagger *docs.SwaggerHandler
-	System  *system.Handlers
-	//v2 *v2.Handlers
+type Router interface {
+	RegisterRoutes(g *gin.RouterGroup)
 }
 
-var ProviderSet = wire.NewSet(
-	docs.NewSwaggerHandler,
-	system.ProviderSet,
-	wire.Struct(new(RouterHandlers), "*"),
-)
+// RouterHandlers 模块Handler的组合
+type RouterHandlers struct {
+	Swagger *swagger.Handler
+	System  *system.Handlers
+}
+
+// Register 注册所有模块路由
+func (r *RouterHandlers) Register(g *gin.RouterGroup) {
+	r.System.RegisterRoutes(g)
+}

@@ -10,6 +10,6 @@ RUN go mod download && \
 
 FROM alpine:3.21
 COPY --from=build-env /go/src/app/output/web /web
-COPY configs/dev /configs
+COPY configs/dev-example /configs
 
 CMD ["/web", "start", "-c", "/configs"]

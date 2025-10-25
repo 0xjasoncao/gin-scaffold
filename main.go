@@ -31,7 +31,6 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "gin-scaffold"
 	app.Version = VERSION
-	app.Usage = ""
 	ctx := logging.NewTagContext(context.Background(), "_main_")
 	app.Commands = []*cli.Command{
 		cmd.Start(ctx, VERSION),

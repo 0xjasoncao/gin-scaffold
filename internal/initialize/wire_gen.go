@@ -9,9 +9,9 @@ package initialize
 import (
 	"context"
 	"gin-scaffold/internal/apis"
-	"gin-scaffold/internal/apis/docs"
-	system3 "gin-scaffold/internal/apis/system"
-	"gin-scaffold/internal/apis/system/v1"
+	"gin-scaffold/internal/apis/handler/swagger"
+	system3 "gin-scaffold/internal/apis/handler/system"
+	"gin-scaffold/internal/apis/handler/system/v1"
 	"gin-scaffold/internal/config"
 	"gin-scaffold/internal/initialize/provider"
 	"gin-scaffold/internal/repository"
@@ -34,7 +34,7 @@ func BuildInjector(ctx context.Context, config2 *config.Config) (*ApiInjector, f
 		cleanup()
 		return nil, nil, err
 	}
-	swaggerHandler := docs.NewSwaggerHandler(config2)
+	handler := swagger.NewHandler(config2)
 	db, cleanup3, err := provider.InitGorm(ctx, config2)
 	if err != nil {
 		cleanup2()
@@ -51,7 +51,7 @@ func BuildInjector(ctx context.Context, config2 *config.Config) (*ApiInjector, f
 		V1: systemV1,
 	}
 	routerHandlers := &apis.RouterHandlers{
-		Swagger: swaggerHandler,
+		Swagger: handler,
 		System:  handlers,
 	}
 	engine := provider.NewRouter(ctx, config2, service, routerHandlers, factory)

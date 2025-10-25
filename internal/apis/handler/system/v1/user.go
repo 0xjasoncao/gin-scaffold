@@ -1,12 +1,11 @@
 package v1
 
 import (
-	"gin-scaffold/internal/apis/system/request"
-	"gin-scaffold/internal/apis/system/response"
+	"gin-scaffold/internal/apis/handler/system/request"
+	"gin-scaffold/internal/apis/handler/system/response"
 	"gin-scaffold/internal/domain/system"
 	"gin-scaffold/pkg/api"
 	"gin-scaffold/pkg/errorsx"
-	"gin-scaffold/pkg/router"
 	"gin-scaffold/pkg/token"
 	"gin-scaffold/pkg/utils/structureutil"
 	"github.com/gin-gonic/gin"
@@ -22,12 +21,6 @@ func NewUserHandler(loginSrv system.UserService, tokenSrv token.Service) *UserHa
 		UserSrv:  loginSrv,
 		TokenSrv: tokenSrv,
 	}
-	router.AddRoute(func(group *gin.RouterGroup) {
-		g := group.Group("/system/v1/user")
-		g.POST("login", user.Login)
-		g.POST("logout", user.Logout)
-	})
-
 	return user
 }
 
@@ -40,7 +33,7 @@ func NewUserHandler(loginSrv system.UserService, tokenSrv token.Service) *UserHa
 //	@Produce		json
 //	@Param			request	body		request.LoginRequest	true	"登录参数"
 //	@Success		200		{object}	api.Response{data=response.LoginResponse}
-//	@Router			/system/v1/user/login/   [post]
+//	@Router			/system/user/login/   [post]
 func (h *UserHandler) Login(ctx *gin.Context) {
 	var in request.LoginRequest
 	err := api.ParseJSON(ctx, &in)
@@ -80,7 +73,7 @@ func (h *UserHandler) Login(ctx *gin.Context) {
 //	@Produce		json
 //	@Param			Authorization	header		string	true	"access_token"
 //	@Success		200				{object}	api.Response
-//	@Router			/system/v1/user/logout [post]
+//	@Router			/system/user/logout [post]
 func (h *UserHandler) Logout(ctx *gin.Context) {
 	accessToken := api.GetToken(ctx)
 	if accessToken == "" {

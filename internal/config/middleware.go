@@ -1,6 +1,8 @@
 package config
 
-import "gin-scaffold/pkg/middleware"
+import (
+	"gin-scaffold/pkg/middleware"
+)
 
 type Middleware struct {
 	Auth      middleware.AuthConfig        `mapstructure:"auth"`
