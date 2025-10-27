@@ -70,7 +70,7 @@ func NewRouter(
 			app.Use(middleware.RateLimitMiddleware(redisFactory.GetDefault(), &config.Middleware.RateLimit))
 		}
 		//register all routes
-		rhs.Register(app.Group(routerCfg.GlobalPrefix))
+		rhs.RegisterRoutes(app.Group(routerCfg.GlobalPrefix))
 
 		if routerCfg.PrintWithStart {
 			routes := app.Routes()

@@ -19,7 +19,7 @@ Go 后端服务。
 - **高效缓存**：Redis 连接工厂支持单机多 DB、集群模式，适配不同部署场景。
 - **日志系统**：Zap + Lumberjack 实现结构化日志输出与日志轮转。
 - **数据访问**：GORM 通用 Repository 封装，简化数据库操作。
-- **全局 ID**：基于 SonyflakeX 生成分布式唯一 ID，避免 ID 冲突。
+- **全局 ID**：基于 Sonyflake 生成分布式唯一 ID，避免 ID 冲突。
 - **丰富中间件**：内置日志、多规则限流、Auth认证、CORS、Gzip、TraceID等常用中间件，支持自定义扩展。
 
 ## 技术栈

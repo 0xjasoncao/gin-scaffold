@@ -16,7 +16,7 @@ type RouterHandlers struct {
 	System  *system.Handlers
 }
 
-// Register 注册所有模块路由
-func (r *RouterHandlers) Register(g *gin.RouterGroup) {
+// RegisterRoutes 注册所有模块路由
+func (r *RouterHandlers) RegisterRoutes(g *gin.RouterGroup) {
 	r.System.RegisterRoutes(g)
 }
