@@ -2,6 +2,7 @@ package validatorutil
 
 import (
 	"errors"
+	"reflect"
 	"strings"
 
 	"github.com/gin-gonic/gin/binding"
@@ -20,10 +21,15 @@ var enTrans ut.Translator
 
 func init() {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		chinese := zh.New()
-		uni := ut.New(chinese, en.New())
+		uni := ut.New(zh.New(), en.New())
 		zhTrans, _ = uni.GetTranslator("zh")
 		enTrans, _ = uni.GetTranslator("en")
+
+		// ，获取struct tag里自定义的json作为字段名
+		v.RegisterTagNameFunc(func(fld reflect.StructField) string {
+			name := fld.Tag.Get("json")
+			return name
+		})
 
 		_ = zh_translations.RegisterDefaultTranslations(v, zhTrans)
 		_ = en_translations.RegisterDefaultTranslations(v, enTrans)

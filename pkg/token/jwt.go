@@ -100,7 +100,7 @@ func (j *jwtToken) IssuingToken(ctx context.Context, payload Payload) (*IssuingT
 
 }
 
-// DestroyToken handles token invalidation
+// DestroyToken handles token invalidation （Add to the  blacklist）
 func (j *jwtToken) DestroyToken(ctx context.Context, tokenStr string) error {
 	claims, err := j.Parse(ctx, tokenStr)
 	if err != nil {
@@ -115,11 +115,13 @@ func (j *jwtToken) DestroyToken(ctx context.Context, tokenStr string) error {
 // Parse verifies a JWT token string and extracts the custom claims
 func (j *jwtToken) Parse(ctx context.Context, tokenStr string) (*Claims, error) {
 
+	//if on the blacklist
 	if exists, err := j.Store.Check(ctx, tokenStr); err != nil {
 		return nil, err
 	} else if exists {
 		return nil, errorsx.New("expired token")
 	}
+
 	token, err := jwt.ParseWithClaims(
 		tokenStr, &Claims{},
 		func(token *jwt.Token) (interface{}, error) {

@@ -8,6 +8,7 @@ import (
 // ProviderSet wire provider
 var ProviderSet = wire.NewSet(
 	v1.NewUserHandler,
+	v1.NewRoleHandler,
 	wire.Struct(new(V1), "*"),
 	wire.Struct(new(Handlers), "*"),
 )

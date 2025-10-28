@@ -27,7 +27,7 @@ func NewUserHandler(loginSrv system.UserService, tokenSrv token.Service) *UserHa
 // Login 登录
 //
 //	@Summary		login
-//	@Description	login by mobile
+//	@Description	login
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
@@ -42,7 +42,7 @@ func (h *UserHandler) Login(ctx *gin.Context) {
 		return
 	}
 	user, err := h.UserSrv.Login(ctx.Request.Context(), system.UserQueryParam{
-		Mobile:   in.Mobile,
+		Email:    in.Email,
 		Password: in.Password,
 	})
 	if err != nil {
@@ -80,10 +80,10 @@ func (h *UserHandler) Logout(ctx *gin.Context) {
 		api.ResError(ctx, errorsx.NewUnauthorized("用户未登录"))
 		return
 	}
-	if err := h.TokenSrv.DestroyToken(ctx, accessToken); err != nil {
+	if err := h.TokenSrv.DestroyToken(ctx.Request.Context(), accessToken); err != nil {
 		api.ResError(ctx, err)
 		return
 	}
-	api.ResWithMessage(ctx, "登出成功")
+	api.ResOKWithMessage(ctx, "登出成功")
 
 }

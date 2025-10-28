@@ -44,8 +44,12 @@ func BuildInjector(ctx context.Context, config2 *config.Config) (*ApiInjector, f
 	userRepo := system.NewUserRepo(db)
 	userService := system2.NewUserService(userRepo)
 	userHandler := v1.NewUserHandler(userService, service)
+	roleRepo := system.NewRoleRepo(db)
+	roleService := system2.NewRoleService(roleRepo)
+	roleHandler := v1.NewRoleHandler(roleService)
 	systemV1 := &system3.V1{
 		User: userHandler,
+		Role: roleHandler,
 	}
 	handlers := &system3.Handlers{
 		V1: systemV1,

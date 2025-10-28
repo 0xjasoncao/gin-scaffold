@@ -28,15 +28,15 @@ type IRepo[T ITable] interface {
 }
 
 type BasicRepo[T ITable] struct {
-	Db *gorm.DB
+	DB *gorm.DB
 }
 
 func NewBasicRepo[T ITable](db *gorm.DB) BasicRepo[T] {
-	return BasicRepo[T]{Db: db}
+	return BasicRepo[T]{DB: db}
 }
 
 func (r *BasicRepo[T]) Model(ctx context.Context) *gorm.DB {
-	return r.Db.WithContext(ctx).Model(new(T))
+	return r.DB.WithContext(ctx).Model(new(T))
 }
 
 func (r *BasicRepo[T]) FindById(ctx context.Context, id any) (*T, error) {
@@ -52,7 +52,7 @@ func (r *BasicRepo[T]) FindById(ctx context.Context, id any) (*T, error) {
 func (r *BasicRepo[T]) FindByIds(ctx context.Context, ids []any) ([]*T, error) {
 
 	var items []*T
-	err := r.Db.WithContext(ctx).Find(&items, ids).Error
+	err := r.DB.WithContext(ctx).Find(&items, ids).Error
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (r *BasicRepo[T]) FindAll(ctx context.Context, arg ...func(*gorm.DB)) ([]*T
 
 func (r *BasicRepo[T]) FindByConditions(ctx context.Context, fn func(tx *gorm.DB) *gorm.DB) (*T, error) {
 	var item *T
-	if err := fn(r.Db.WithContext(ctx)).First(&item).Error; err != nil {
+	if err := fn(r.DB.WithContext(ctx)).First(&item).Error; err != nil {
 		return nil, err
 	}
 
@@ -129,17 +129,17 @@ func (r *BasicRepo[T]) UpdateByWhere(ctx context.Context, data any, where string
 }
 
 func (r *BasicRepo[T]) Create(ctx context.Context, data *T) error {
-	return r.Db.WithContext(ctx).Create(data).Error
+	return r.DB.WithContext(ctx).Create(data).Error
 }
 
 func (r *BasicRepo[T]) Insert(ctx context.Context, data []*T) error {
-	return r.Db.WithContext(ctx).Create(data).Error
+	return r.DB.WithContext(ctx).Create(data).Error
 }
 
 func (r *BasicRepo[T]) Transaction(ctx context.Context, fn func(tx *gorm.DB) error) error {
-	return r.Db.WithContext(ctx).Transaction(fn)
+	return r.DB.WithContext(ctx).Transaction(fn)
 }
 
 func (r *BasicRepo[T]) Delete(ctx context.Context, id any) error {
-	return r.Db.WithContext(ctx).Delete(new(T), id).Error
+	return r.DB.WithContext(ctx).Delete(new(T), id).Error
 }

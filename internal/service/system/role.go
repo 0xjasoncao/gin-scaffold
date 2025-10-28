@@ -9,6 +9,10 @@ type roleService struct {
 	repo system.RoleRepo
 }
 
+func (r *roleService) Delete(ctx context.Context, ids []uint64) error {
+	return r.repo.Delete(ctx, ids)
+}
+
 func NewRoleService(repo system.RoleRepo) system.RoleService {
 	return &roleService{repo: repo}
 }

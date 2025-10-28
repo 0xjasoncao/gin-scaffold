@@ -33,7 +33,7 @@ func ResData(c *gin.Context, data interface{}) {
 		Data:    data,
 	})
 }
-func ResWithMessage(c *gin.Context, message string) {
+func ResOKWithMessage(c *gin.Context, message string) {
 	ResJSON(c, http.StatusOK, Response{
 		Success: true,
 		Code:    http.StatusOK,

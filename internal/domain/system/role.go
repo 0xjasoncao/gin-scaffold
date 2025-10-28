@@ -25,4 +25,5 @@ type RoleRepo interface {
 
 type RoleService interface {
 	Create(ctx context.Context, role Role) error
+	Delete(ctx context.Context, ids []uint64) error
 }

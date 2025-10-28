@@ -19,4 +19,5 @@ type RouterHandlers struct {
 // RegisterRoutes 注册所有模块路由
 func (r *RouterHandlers) RegisterRoutes(g *gin.RouterGroup) {
 	r.System.RegisterRoutes(g)
+	r.Swagger.RegisterRoutes(g)
 }

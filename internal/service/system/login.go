@@ -18,9 +18,9 @@ func NewUserService(userRepo system.UserRepo) system.UserService {
 }
 
 func (srv *userService) Login(ctx context.Context, param system.UserQueryParam) (*system.User, error) {
-	if param.Mobile != "" {
+	if param.Email != "" {
 
-		u, err := srv.userRepo.FindByWhere(ctx, "mobile=?", param.Mobile)
+		u, err := srv.userRepo.FindByWhere(ctx, "email=?", param.Email)
 		if err != nil {
 			if errorsx.Is(err, gorm.ErrRecordNotFound) {
 				return nil, errorsx.NewNotFound("用户不存在")

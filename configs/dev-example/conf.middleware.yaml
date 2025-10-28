@@ -19,7 +19,7 @@ middleware:
     enable: true
   auth:
     enable: true
-    skip-path-prefix: ["/api/system/v1/user/login", "/api/docs/swagger"]
+    skip-path-prefix: ["/api/v1/system/user/login", "/api/swagger"]
   trace-id:
     enable: true
   copy-body:
