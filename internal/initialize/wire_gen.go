@@ -9,9 +9,9 @@ package initialize
 import (
 	"context"
 	"gin-scaffold/internal/apis"
-	"gin-scaffold/internal/apis/handler/swagger"
-	system3 "gin-scaffold/internal/apis/handler/system"
-	"gin-scaffold/internal/apis/handler/system/v1"
+	"gin-scaffold/internal/apis/swagger"
+	system3 "gin-scaffold/internal/apis/system"
+	v12 "gin-scaffold/internal/apis/system/v1"
 	"gin-scaffold/internal/config"
 	"gin-scaffold/internal/initialize/provider"
 	"gin-scaffold/internal/repository"
@@ -43,10 +43,10 @@ func BuildInjector(ctx context.Context, config2 *config.Config) (*ApiInjector, f
 	}
 	userRepo := system.NewUserRepo(db)
 	userService := system2.NewUserService(userRepo)
-	userHandler := v1.NewUserHandler(userService, service)
+	userHandler := v12.NewUserHandler(userService, service)
 	roleRepo := system.NewRoleRepo(db)
 	roleService := system2.NewRoleService(roleRepo)
-	roleHandler := v1.NewRoleHandler(roleService)
+	roleHandler := v12.NewRoleHandler(roleService)
 	systemV1 := &system3.V1{
 		User: userHandler,
 		Role: roleHandler,

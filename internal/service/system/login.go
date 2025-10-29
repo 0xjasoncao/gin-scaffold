@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"gin-scaffold/internal/domain/system"
-	"gin-scaffold/pkg/errorsx"
+	"gin-scaffold/pkg/core/errorsx"
 	"gin-scaffold/pkg/utils/encryptutil"
 	"gorm.io/gorm"
 )

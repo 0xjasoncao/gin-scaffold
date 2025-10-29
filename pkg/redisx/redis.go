@@ -2,7 +2,7 @@ package redisx
 
 import (
 	"context"
-	"gin-scaffold/pkg/errorsx"
+	"gin-scaffold/pkg/core/errorsx"
 	"gin-scaffold/pkg/logging"
 	"github.com/redis/go-redis/v9"
 	"slices"

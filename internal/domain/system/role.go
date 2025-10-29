@@ -3,7 +3,7 @@ package system
 import (
 	"context"
 	"gin-scaffold/internal/domain/shared"
-	BasicRepo "gin-scaffold/pkg/repo"
+	core "gin-scaffold/pkg/core"
 )
 
 type Role struct {
@@ -15,15 +15,21 @@ type Role struct {
 
 type Roles []*Role
 
+type RoleQueryParam struct {
+	core.PageParam
+}
+
 func (Role) TableName() string {
 	return "sys_roles"
 }
 
 type RoleRepo interface {
-	BasicRepo.IRepo[Role]
+	core.UniversalRepo[Role]
 }
 
 type RoleService interface {
 	Create(ctx context.Context, role Role) error
 	Delete(ctx context.Context, ids []uint64) error
+	Update(ctx context.Context, role Role) error
+	Query(ctx context.Context, param RoleQueryParam) (Roles, *core.Pagination, error)
 }

@@ -2,7 +2,7 @@ package system
 
 import (
 	"context"
-	"gin-scaffold/pkg/repo"
+	"gin-scaffold/pkg/core"
 	"time"
 
 	"gin-scaffold/internal/domain/shared"
@@ -35,7 +35,7 @@ func (User) TableName() string {
 }
 
 type UserRepo interface {
-	repo.IRepo[User]
+	core.UniversalRepo[User]
 }
 
 type UserService interface {

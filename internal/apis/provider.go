@@ -1,8 +1,8 @@
 package apis
 
 import (
-	"gin-scaffold/internal/apis/handler/swagger"
-	"gin-scaffold/internal/apis/handler/system"
+	"gin-scaffold/internal/apis/swagger"
+	"gin-scaffold/internal/apis/system"
 	"github.com/google/wire"
 )
 

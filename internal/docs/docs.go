@@ -24,9 +24,8 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/system/v1/user/login/": {
+        "/system/role/create": {
             "post": {
-                "description": "login by mobile",
                 "consumes": [
                     "application/json"
                 ],
@@ -34,9 +33,160 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "角色"
                 ],
-                "summary": "login",
+                "summary": "创建角色",
+                "parameters": [
+                    {
+                        "description": "创建参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.RoleCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建成功",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/system/role/delete": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色"
+                ],
+                "summary": "删除角色",
+                "parameters": [
+                    {
+                        "description": "删除参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.RoleDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "删除成功",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/system/role/query": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色"
+                ],
+                "summary": "查询角色列表",
+                "parameters": [
+                    {
+                        "description": "查询参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.RoleQueryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/ginutil.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/response.RoleQueryResponse"
+                                            }
+                                        },
+                                        "Meta": {
+                                            "$ref": "#/definitions/core.Pagination"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/system/role/update": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色"
+                ],
+                "summary": "编辑角色",
+                "parameters": [
+                    {
+                        "description": "编辑参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.RoleUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "编辑成功",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/system/user/login/": {
+            "post": {
+                "description": "login",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户"
+                ],
+                "summary": "登录",
                 "parameters": [
                     {
                         "description": "登录参数",
@@ -54,7 +204,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/api.Response"
+                                    "$ref": "#/definitions/ginutil.Response"
                                 },
                                 {
                                     "type": "object",
@@ -70,9 +220,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/system/v1/user/logout": {
+        "/system/user/logout": {
             "post": {
-                "description": "login by mobile",
                 "consumes": [
                     "application/json"
                 ],
@@ -80,9 +229,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "用户"
                 ],
-                "summary": "logout",
+                "summary": "登出",
                 "parameters": [
                     {
                         "type": "string",
@@ -96,7 +245,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api.Response"
+                            "$ref": "#/definitions/ginutil.Response"
                         }
                     }
                 }
@@ -104,7 +253,46 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "api.Response": {
+        "core.OrderDirection": {
+            "type": "integer",
+            "enum": [
+                1,
+                2
+            ],
+            "x-enum-varnames": [
+                "OrderByASC",
+                "OrderByDESC"
+            ]
+        },
+        "core.OrderField": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "order": {
+                    "$ref": "#/definitions/core.OrderDirection"
+                }
+            }
+        },
+        "core.Pagination": {
+            "type": "object",
+            "properties": {
+                "current": {
+                    "description": "Current Page",
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "description": "Page Size",
+                    "type": "integer"
+                },
+                "total": {
+                    "description": "Total count",
+                    "type": "integer"
+                }
+            }
+        },
+        "ginutil.Response": {
             "type": "object",
             "properties": {
                 "code": {
@@ -123,12 +311,12 @@ const docTemplate = `{
         "request.LoginRequest": {
             "type": "object",
             "required": [
-                "mobile",
+                "email",
                 "password",
                 "verify_code"
             ],
             "properties": {
-                "mobile": {
+                "email": {
                     "type": "string"
                 },
                 "password": {
@@ -141,6 +329,78 @@ const docTemplate = `{
                 }
             }
         },
+        "request.RoleCreateRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.RoleDeleteRequest": {
+            "type": "object",
+            "required": [
+                "ids"
+            ],
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "request.RoleQueryRequest": {
+            "type": "object",
+            "properties": {
+                "-": {
+                    "description": "Pagination",
+                    "type": "boolean"
+                },
+                "current": {
+                    "description": "Current page",
+                    "type": "integer"
+                },
+                "order_fields": {
+                    "type": "array",
+                    "maxItems": 5,
+                    "items": {
+                        "$ref": "#/definitions/core.OrderField"
+                    }
+                },
+                "pageSize": {
+                    "description": "Page size",
+                    "type": "integer",
+                    "maximum": 100
+                }
+            }
+        },
+        "request.RoleUpdateRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "name"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "response.LoginResponse": {
             "type": "object",
             "properties": {
@@ -148,7 +408,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "nick_name": {
                     "type": "string"
@@ -157,6 +417,31 @@ const docTemplate = `{
                     "$ref": "#/definitions/token.IssuingTokenInfo"
                 },
                 "user_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.RoleQueryResponse": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "CreatedAt",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "description": "UpdatedAt",
                     "type": "string"
                 }
             }

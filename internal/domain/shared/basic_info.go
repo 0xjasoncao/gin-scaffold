@@ -1,7 +1,7 @@
 package shared
 
 import (
-	"gin-scaffold/pkg/api"
+	"gin-scaffold/pkg/core/ginutil"
 	"gin-scaffold/pkg/sonyflakex"
 	"gorm.io/gorm"
 	"time"
@@ -18,7 +18,7 @@ type BasicInfo struct {
 // BeforeCreate gorm before create hook
 func (b *BasicInfo) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = sonyflakex.NewSonyFlakeId()
-	tokenInfo := api.TokenFromContext(tx.Statement.Context)
+	tokenInfo := ginutil.TokenFromContext(tx.Statement.Context)
 	if tokenInfo != nil {
 		b.CreatorId = tokenInfo.UserID
 	}

@@ -2,14 +2,14 @@ package system
 
 import (
 	"gin-scaffold/internal/domain/system"
-	"gin-scaffold/pkg/repo"
+	"gin-scaffold/pkg/core"
 	"gorm.io/gorm"
 )
 
 type userRepo struct {
-	repo.BasicRepo[system.User]
+	core.Repository[system.User]
 }
 
 func NewUserRepo(db *gorm.DB) system.UserRepo {
-	return &userRepo{repo.NewBasicRepo[system.User](db)}
+	return &userRepo{core.NewRepository[system.User](db)}
 }

@@ -10,7 +10,7 @@ import (
 	"gin-scaffold/internal/config"
 	"gin-scaffold/pkg/logging"
 
-	"gin-scaffold/pkg/errorsx"
+	"gin-scaffold/pkg/core/errorsx"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

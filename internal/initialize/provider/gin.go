@@ -4,10 +4,10 @@ import (
 	"context"
 	"gin-scaffold/internal/apis"
 	"gin-scaffold/internal/config"
+	middleware2 "gin-scaffold/pkg/core/middleware"
+	"gin-scaffold/pkg/core/token"
 	"gin-scaffold/pkg/logging"
-	"gin-scaffold/pkg/middleware"
 	"gin-scaffold/pkg/redisx"
-	"gin-scaffold/pkg/token"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,46 +28,46 @@ func NewRouter(
 
 	// middleware
 	{
-		app.NoRoute(middleware.NoRoute())
-		app.NoMethod(middleware.NoMethod())
+		app.NoRoute(middleware2.NoRoute())
+		app.NoMethod(middleware2.NoMethod())
 
 		//gzip
 		gzipConf := config.Middleware.Gzip
 		if gzipConf.Enable {
-			app.Use(middleware.GzipMiddleware(&gzipConf))
+			app.Use(middleware2.GzipMiddleware(&gzipConf))
 		}
 
 		routerCfg := config.App.Router
 
 		//trace
 		if config.Middleware.TraceId.Enable {
-			app.Use(middleware.Trace(&config.Middleware.TraceId))
+			app.Use(middleware2.Trace(&config.Middleware.TraceId))
 		}
 		//copyBody
 		if config.Middleware.CopyBody.Enable {
-			app.Use(middleware.CopyBodyMiddleware(&config.Middleware.CopyBody))
+			app.Use(middleware2.CopyBodyMiddleware(&config.Middleware.CopyBody))
 
 		}
 		//logger
 		if config.Middleware.Logger.Enable {
-			app.Use(middleware.LoggerMiddleware())
+			app.Use(middleware2.LoggerMiddleware())
 		} else {
 			app.Use(gin.Logger())
 		}
 		//recovery
-		app.Use(middleware.RecoveryMiddleware())
+		app.Use(middleware2.RecoveryMiddleware())
 		//auth
 		if config.Middleware.Auth.Enable {
-			app.Use(middleware.Auth(tokenSrv, &config.Middleware.Auth))
+			app.Use(middleware2.Auth(tokenSrv, &config.Middleware.Auth))
 		}
 		//cors
 		if config.Middleware.Cors.Enable {
-			app.Use(middleware.CORSMiddleware(&config.Middleware.Cors))
+			app.Use(middleware2.CORSMiddleware(&config.Middleware.Cors))
 		}
 		//rate limit
 		if config.Middleware.RateLimit.Enable {
 			//这里默认使用db0存储,实际情况自行选择
-			app.Use(middleware.RateLimitMiddleware(redisFactory.GetDefault(), &config.Middleware.RateLimit))
+			app.Use(middleware2.RateLimitMiddleware(redisFactory.GetDefault(), &config.Middleware.RateLimit))
 		}
 		//register all routes
 		rhs.RegisterRoutes(app.Group(routerCfg.GlobalPrefix))

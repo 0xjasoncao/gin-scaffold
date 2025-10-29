@@ -3,9 +3,9 @@ package provider
 import (
 	"context"
 	"gin-scaffold/internal/config"
+	"gin-scaffold/pkg/core/token"
 	"gin-scaffold/pkg/logging"
 	"gin-scaffold/pkg/redisx"
-	"gin-scaffold/pkg/token"
 )
 
 func InitTokenService(ctx context.Context, config *config.Config, redisFactory *redisx.Factory) (token.Service, func(), error) {
